@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SKT Takip">
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root {
@@ -60,10 +60,7 @@ label{display:block;font-size:11px;font-weight:700;color:var(--text-muted);text-
 input,select{width:100%;padding:11px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--text);background:var(--bg);transition:border .2s,background .2s;}
 input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff;}
 #scanner-wrap{width:100%;aspect-ratio:1;background:#0a0a0a;border-radius:12px;overflow:hidden;position:relative;margin-bottom:12px;}
-#reader{width:100%;height:100%;}
-#reader video{width:100%!important;height:100%!important;object-fit:cover!important;}
-#reader img{display:none!important;}
-#reader__scan_region{width:100%!important;height:100%!important;}
+#scanner-video{width:100%;height:100%;object-fit:cover;display:block;}
 .scan-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
 .scan-frame{width:62%;height:62%;position:relative;border-radius:8px;box-shadow:0 0 0 2000px rgba(0,0,0,.45);}
 .scan-corner{position:absolute;width:22px;height:22px;border-color:#52B788;border-style:solid;border-width:0;}
@@ -178,8 +175,8 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
     </div>
     <div id="scanner-live" class="hidden">
       <div id="scanner-wrap">
-        <div id="reader"></div>
-        <div class="scan-overlay" style="pointer-events:none;">
+        <video id="scanner-video" autoplay muted playsinline></video>
+        <div class="scan-overlay">
           <div class="scan-frame">
             <div class="scan-corner tl"></div><div class="scan-corner tr"></div>
             <div class="scan-corner bl"></div><div class="scan-corner br"></div>
@@ -366,7 +363,8 @@ let currentProduct = null;
 let editTarget = null;
 let pendingImport = null;
 let scannerOn = false;
-let html5QrCode = null;
+let scanStream = null;
+let scanInterval = null;
 const SKEY = 'skt-v3';
 
 // ========== STORAGE ==========
@@ -412,55 +410,63 @@ function goTab(tab){
 }
 
 // ========== SCANNER ==========
-function startScanner(){
+async function startScanner(){
   if(!DB.products.length){toast('Önce Excel listesi yükleyin!');return;}
+
+  if(!('BarcodeDetector' in window)){
+    toast('Tarayıcınız barkod okumayı desteklemiyor, manuel girin.');
+    return;
+  }
+
   document.getElementById('scanner-placeholder').classList.add('hidden');
   document.getElementById('scanner-live').classList.remove('hidden');
   document.getElementById('scan-banner').classList.add('hidden');
 
-  html5QrCode = new Html5Qrcode("reader", {
-    formatsToSupport: [
-      Html5QrcodeSupportedFormats.EAN_13,
-      Html5QrcodeSupportedFormats.EAN_8,
-      Html5QrcodeSupportedFormats.CODE_128,
-      Html5QrcodeSupportedFormats.UPC_A,
-      Html5QrcodeSupportedFormats.UPC_E,
-      Html5QrcodeSupportedFormats.CODE_39
-    ],
-    verbose: false
-  });
-  const config = {
-    fps: 15,
-    qrbox: { width: 280, height: 120 },
-    aspectRatio: 1.0,
-    disableFlip: false
-  };
+  try {
+    scanStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width:{ideal:1280}, height:{ideal:720} }
+    });
+    const video = document.getElementById('scanner-video');
+    video.srcObject = scanStream;
+    await video.play();
 
-  html5QrCode.start(
-    { facingMode: "environment" },
-    config,
-    (code) => {
-      if(!code || code.length < 4) return;
-      stopScanner();
-      handleBarcode(code, true);
-    },
-    (err) => {} // ignore scan errors
-  ).catch(e => {
-    toast('Kamera açılamadı: ' + e);
+    const detector = new BarcodeDetector({
+      formats: ['ean_13','ean_8','code_128','upc_a','upc_e','code_39','itf','codabar']
+    });
+
+    scannerOn = true;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    scanInterval = setInterval(async () => {
+      if(!scannerOn || video.readyState < 2) return;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      try {
+        const barcodes = await detector.detect(canvas);
+        if(barcodes.length > 0) {
+          const code = barcodes[0].rawValue;
+          if(code && code.length >= 4) {
+            stopScanner();
+            handleBarcode(code, true);
+          }
+        }
+      } catch(e){}
+    }, 200);
+
+  } catch(e) {
+    toast('Kamera açılamadı: ' + e.message);
     stopScanner();
-  });
-
-  scannerOn = true;
+  }
 }
 
 function stopScanner(){
-  if(html5QrCode){
-    html5QrCode.stop().then(()=>{
-      html5QrCode.clear();
-      html5QrCode=null;
-    }).catch(()=>{html5QrCode=null;});
-  }
-  scannerOn=false;
+  if(scanInterval){ clearInterval(scanInterval); scanInterval=null; }
+  if(scanStream){ scanStream.getTracks().forEach(t=>t.stop()); scanStream=null; }
+  const video = document.getElementById('scanner-video');
+  if(video) video.srcObject = null;
+  scannerOn = false;
   document.getElementById('scanner-live').classList.add('hidden');
   document.getElementById('scanner-placeholder').classList.remove('hidden');
 }
