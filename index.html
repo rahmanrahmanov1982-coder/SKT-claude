@@ -305,7 +305,15 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
 
   <div class="card">
     <div class="card-title">⚠️ Tehlike Bölgesi</div>
-    <button class="btn btn-danger" onclick="clearAll()">🗑️ Tüm Verileri Sil</button>
+    <div class="form-group">
+      <label>Silme Şifresi Belirle</label>
+      <div style="display:flex;gap:8px;">
+        <input type="password" id="delete-pw-input" placeholder="Şifre gir..." style="flex:1;">
+        <button class="btn btn-secondary btn-sm" onclick="saveDeletePassword()">Kaydet</button>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:6px;" id="delete-pw-status">Şifre belirlenmedi</div>
+    </div>
+    <button class="btn btn-danger" onclick="clearAll()" style="margin-top:4px;">🗑️ Tüm Verileri Sil</button>
   </div>
 </div>
 
@@ -356,13 +364,14 @@ const CONFIRM_HITS = 4;
 const SKEY = 'skt-v3';
 
 // ========== STORAGE ==========
-async function loadDB(){try{const r=await window.storage.get(SKEY);if(r?.value)DB=JSON.parse(r.value);}catch(e){}}
-async function saveDB(){try{await window.storage.set(SKEY,JSON.stringify(DB));}catch(e){}}
+function loadDB(){try{const r=localStorage.getItem(SKEY);if(r)DB=JSON.parse(r);}catch(e){}}
+function saveDB(){try{localStorage.setItem(SKEY,JSON.stringify(DB));}catch(e){}}
 
 // ========== INIT ==========
 async function init(){
-  await loadDB();
+  loadDB();
   refreshHeader(); refreshListStatus(); loadTGFields();
+  loadDeletePwStatus();
   updateNotifPermStatus(); renderList(); renderInventory();
   silentNotifCheck(); startAutoTimer();
 }
@@ -791,6 +800,20 @@ function exportExcel(){
 }
 
 // ========== TELEGRAM ==========
+function loadDeletePwStatus(){
+  const el=document.getElementById('delete-pw-status');
+  if(!el) return;
+  el.textContent=DB.deletePassword?'✅ Şifre belirlenmiş':'Şifre belirlenmedi';
+}
+function saveDeletePassword(){
+  const v=document.getElementById('delete-pw-input').value.trim();
+  if(!v){toast('Şifre boş olamaz!');return;}
+  DB.deletePassword=v;
+  saveDB();
+  document.getElementById('delete-pw-input').value='';
+  loadDeletePwStatus();
+  toast('✅ Silme şifresi kaydedildi!');
+}
 function loadTGFields(){
   document.getElementById('tg-token').value=DB.tg.token||'';
   document.getElementById('tg-chatid').value=DB.tg.chatId||'';
@@ -843,43 +866,33 @@ async function testTelegram(){
 function buildDailyReport(){
   const today=new Date().toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric'});
   const all=[...DB.products,...DB.removed];
-
-  const expired=[],d0=[],d3=[],d5=[],ok=[];
+  const expired=[],d0=[],d3=[],d5=[];
   all.forEach(p=>{
     (p.skts||[]).forEach(e=>{
       const d=daysLeft(e.tarih);
-      // Format: • barkod - ÜRÜN ADI (tarih)
       const line=`• ${p.barkod} - ${p.ad} (${fmtDate(e.tarih)})`;
-      if(d<0) expired.push({line,d});
-      else if(d===0) d0.push({line,d});
-      else if(d<=3) d3.push({line,d});
-      else if(d<=5) d5.push({line,d});
-      else ok.push({line,d});
+      if(d<0) expired.push(line);
+      else if(d===0) d0.push(line);
+      else if(d<=3) d3.push(line);
+      else if(d<=5) d5.push(line);
     });
   });
-
   let msg=`📊 <b>GÜNLÜK SKT RAPORU (${today})</b>\n`;
-
   const critical=[...expired,...d0,...d3];
   if(critical.length){
     msg+=`\n🔴 <b>KRİTİK DURUM (0-3 GÜN):</b>\n`;
-    critical.forEach(x=>msg+=x.line+'\n');
+    critical.forEach(l=>msg+=l+'\n');
   }
   if(d5.length){
     msg+=`\n🟡 <b>UYARI (4-5 GÜN):</b>\n`;
-    d5.forEach(x=>msg+=x.line+'\n');
+    d5.forEach(l=>msg+=l+'\n');
   }
-  if(ok.length){
-    msg+=`\n🟢 <b>GÜVENLİ (6+ GÜN):</b>\n`;
-    ok.forEach(x=>msg+=x.line+'\n');
+  if(!critical.length&&!d5.length){
+    msg+=`\n✅ <b>5 gün içinde SKT dolacak ürün yok.</b>\n`;
+    msg+=`Kayıtlı ürün: ${DB.products.length}\n`;
   }
-  if(!critical.length&&!d5.length&&!ok.length){
-    msg+=`\n✅ <b>SKT kaydı bulunmuyor.</b>\n`;
-    msg+=`Sisteme kayıtlı ürün sayısı: ${DB.products.length}\n`;
-  }
-
-  const toplam=expired.length+d0.length+d3.length+d5.length+ok.length;
-  if(toplam>0) msg+=`\n📦 <b>Toplam ${toplam} SKT kaydı</b> • ${DB.products.length} aktif ürün`;
+  const toplam=expired.length+d0.length+d3.length+d5.length;
+  if(toplam>0) msg+=`\n📦 <b>Toplam ${toplam} kayıt</b> • ${DB.products.length} aktif ürün`;
   return msg;
 }
 
@@ -903,7 +916,7 @@ function startAutoTimer(){
     const todayKey=`auto_${now.toISOString().split('T')[0]}`;
     if(cur===target&&!DB.notifLog[todayKey]){
       DB.notifLog[todayKey]=true;
-      await saveDB();
+      saveDB();
       sendTG(buildDailyReport());
     }
   },30000);
@@ -945,8 +958,12 @@ function toast(msg){
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 function clearAll(){
-  if(!confirm('TÜM veriler silinecek. Emin misin?')) return;
-  DB={products:[],removed:[],tg:DB.tg,notifLog:{}};
+  const userPw=prompt('Silme şifresini girin:');
+  if(userPw===null) return;
+  const savedPw=DB.deletePassword||'';
+  if(!savedPw){toast('Önce ayarlardan silme şifresi belirleyin!');return;}
+  if(userPw!==savedPw){toast('❌ Yanlış şifre!');return;}
+  DB={products:[],removed:[],tg:DB.tg,deletePassword:DB.deletePassword,notifLog:{}};
   saveDB();refreshHeader();refreshListStatus();renderList();renderInventory();toast('Veriler silindi');
 }
 
