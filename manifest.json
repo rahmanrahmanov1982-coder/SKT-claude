@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/",
+  "start_url": "/SKT-claude/",
   "display": "standalone",
   "background_color": "#1B5E3B",
   "theme_color": "#1B5E3B"
