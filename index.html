@@ -205,10 +205,6 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
     <div class="card">
       <div class="card-title">SKT Bilgisi Ekle</div>
       <div class="form-group"><label>Son Kullanma Tarihi</label><input type="date" id="skt-date"></div>
-      <div class="row2">
-        <div class="form-group"><label>Adet</label><input type="number" id="skt-adet" placeholder="1" min="1"></div>
-        <div class="form-group"><label>Raf / Reyon</label><input type="text" id="skt-raf" placeholder="A1"></div>
-      </div>
       <div class="form-group"><label>Not</label><input type="text" id="skt-not" placeholder="..."></div>
       <button class="btn btn-primary" onclick="saveSKT()">✅ Kaydet</button>
     </div>
@@ -328,10 +324,6 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
     <div class="modal-handle"></div>
     <div class="modal-title">SKT Düzenle</div>
     <div class="form-group"><label>Son Kullanma Tarihi</label><input type="date" id="e-date"></div>
-    <div class="row2">
-      <div class="form-group"><label>Adet</label><input type="number" id="e-adet" min="1"></div>
-      <div class="form-group"><label>Raf</label><input type="text" id="e-raf"></div>
-    </div>
     <div class="form-group"><label>Not</label><input type="text" id="e-not"></div>
     <div class="modal-row">
       <button class="btn btn-secondary" onclick="closeModal()">İptal</button>
@@ -525,8 +517,6 @@ function saveSKT(){
   if(!currentProduct.skts) currentProduct.skts=[];
   currentProduct.skts.push({
     id:Date.now(),tarih:d,
-    adet:parseInt(document.getElementById('skt-adet').value)||1,
-    raf:document.getElementById('skt-raf').value.trim(),
     not:document.getElementById('skt-not').value.trim()
   });
   currentProduct.skts.sort((a,b)=>a.tarih.localeCompare(b.tarih));
@@ -599,7 +589,7 @@ function renderList(){
     const bc=skts.length?borderClass(minDays):'border-gray';
     const sktRows=skts.map(e=>{
       const d=daysLeft(e.tarih);
-      const meta=[e.adet+'a',e.raf,e.not].filter(Boolean).join(' · ');
+      const meta=e.not||'';
       const realIdx=p.skts.indexOf(e);
       return `<div class="skt-row">
         <div style="flex:1;min-width:0;">
@@ -724,8 +714,6 @@ function saveEdit(){
   const p=findProduct(editTarget.barkod);if(!p) return;
   p.skts[editTarget.idx]={...p.skts[editTarget.idx],
     tarih:document.getElementById('e-date').value,
-    adet:parseInt(document.getElementById('e-adet').value)||1,
-    raf:document.getElementById('e-raf').value.trim(),
     not:document.getElementById('e-not').value.trim()
   };
   p.skts.sort((a,b)=>a.tarih.localeCompare(b.tarih));
@@ -814,8 +802,8 @@ function cancelImport(){pendingImport=null;document.getElementById('diff-overlay
 // ========== EXPORT ==========
 function exportExcel(){
   const all=[...DB.products.map(p=>({...p,durum:'Aktif'})),...DB.removed.map(p=>({...p,durum:'Listede Yok'}))];
-  const rows=[['Ürün Adı','Barkod','SKT Tarihi','Adet','Raf/Reyon','Not','Durum','Kalan Gün']];
-  all.forEach(p=>(p.skts||[]).forEach(e=>rows.push([p.ad,p.barkod,e.tarih,e.adet,e.raf||'',e.not||'',p.durum,daysLeft(e.tarih)])));
+  const rows=[['Ürün Adı','Barkod','SKT Tarihi','Not','Durum','Kalan Gün']];
+  all.forEach(p=>(p.skts||[]).forEach(e=>rows.push([p.ad,p.barkod,e.tarih,e.not||'',p.durum,daysLeft(e.tarih)])));
   if(rows.length===1){toast('Dışa aktarılacak veri yok!');return;}
   const ws=XLSX.utils.aoa_to_sheet(rows);
   ws['!cols']=[{wch:30},{wch:15},{wch:14},{wch:8},{wch:12},{wch:20},{wch:14},{wch:12}];
