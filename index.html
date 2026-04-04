@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SKT Takip</title>
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="android-chrome-192x192.png">
-<meta name="theme-color" content="#1B5E3B">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -363,7 +360,7 @@ let pendingImport = null;
 let scannerOn = false;
 let detectionCounts = {};
 let detectionTimer = null;
-const CONFIRM_HITS = 4;
+const CONFIRM_HITS = 2;
 const SKEY = 'skt-v3';
 
 // ========== STORAGE ==========
@@ -419,8 +416,8 @@ function startScanner(){
   Quagga.init({
     inputStream:{name:'Live',type:'LiveStream',target:document.querySelector('#interactive'),
       constraints:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}},
-    locator:{patchSize:'medium',halfSample:true},
-    numOfWorkers:2,frequency:8,
+    locator:{patchSize:'medium',halfSample:false},
+    numOfWorkers:2,frequency:15,
     decoder:{readers:['ean_reader','ean_8_reader','code_128_reader','upc_reader']},
     locate:true
   },err=>{
