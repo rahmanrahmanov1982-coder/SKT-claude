@@ -345,12 +345,52 @@ let scannerOn = false;
 const SKEY = 'skt-v4';
 
 // ===== STORAGE =====
-function loadDB(){try{const r=localStorage.getItem(SKEY);if(r)DB=JSON.parse(r);}catch(e){}}
-function saveDB(){try{localStorage.setItem(SKEY,JSON.stringify(DB));}catch(e){}}
+const GS_URL = 'https://script.google.com/macros/s/AKfycbxMwEiYvL_Btq4inzDB30ovOsNXBUuWFJ6g7MK2rfoO2PnGNAt9x9m_PvPbeQ7_ibCO/exec';
+
+async function loadDB(){
+  // Try Google Sheets first
+  try {
+    showLoading(true);
+    const r = await fetch(GS_URL);
+    const d = await r.json();
+    if(d && d.products) { DB = d; showLoading(false); return; }
+  } catch(e) {}
+  // Fallback to localStorage
+  try { const r=localStorage.getItem(SKEY); if(r) DB=JSON.parse(r); } catch(e) {}
+  showLoading(false);
+}
+
+async function saveDB(){
+  // Save to localStorage immediately
+  try { localStorage.setItem(SKEY, JSON.stringify(DB)); } catch(e) {}
+  // Save to Google Sheets in background
+  try {
+    fetch(GS_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain'},
+      body: JSON.stringify(DB)
+    });
+  } catch(e) {}
+}
+
+function showLoading(show){
+  let el = document.getElementById('loading-overlay');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'loading-overlay';
+    el.style.cssText = 'position:fixed;inset:0;background:var(--primary);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;color:#fff;gap:16px;';
+    el.innerHTML = '<div style="font-size:48px;">🏪</div><div style="font-size:18px;font-weight:700;">SKT Takip</div><div style="font-size:14px;opacity:.8;">Veriler yükleniyor...</div><div id="load-spin" style="width:32px;height:32px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;"></div>';
+    const style = document.createElement('style');
+    style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+    document.head.appendChild(style);
+    document.body.appendChild(el);
+  }
+  el.style.display = show ? 'flex' : 'none';
+}
 
 // ===== INIT =====
-function init(){
-  loadDB();
+async function init(){
+  await loadDB();
   refreshHeader(); refreshListStatus(); loadSettings();
   checkNotifStatus(); renderList(); renderInventory();
   silentCheck(); startAutoTimer();
