@@ -269,7 +269,7 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
 <div class="toast" id="toast"></div>
 
 <script>
-const GS_URL = 'https://script.google.com/macros/s/AKfycby-H_2FM2qVDaZduW3Mv34MVsomHHEcyJYtS-gHistweRJZGrqfkDprMnhpXYbmILMI/exec';
+const GS_URL = 'https://script.google.com/macros/s/AKfycbwjqFCNhjkROswV0mOCebgd7uVtIracqzX9bwLusDWrfKHSzwMGabJc3eixbuFxhKQk/exec';
 const SKEY = 'skt-v6';
 
 let DB = {products:[], removed:[], skts:{}, notifLog:{}};
@@ -305,16 +305,26 @@ async function gsLoad(){
 
 async function gsSave(){
   lsSave();
-  return new Promise((resolve)=>{
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', GS_URL, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function(){
-      if(xhr.readyState === 4) resolve(xhr.status === 200);
-    };
-    xhr.onerror = ()=>resolve(false);
-    xhr.send(JSON.stringify({action:'save', data:DB}));
-  });
+  // No-op: individual saves handle GS writes
+  return true;
+}
+
+async function gsSaveSKT(barkod, skt){
+  try{
+    const url = GS_URL+'?action=saveskt&b='+encodeURIComponent(barkod)+'&t='+encodeURIComponent(skt.t)+'&n='+encodeURIComponent(skt.n||'')+'&id='+encodeURIComponent(skt.id)+'&ts='+Date.now();
+    const r = await fetch(url);
+    const d = await r.json();
+    return d.ok === true;
+  }catch(e){ return false; }
+}
+
+async function gsDelSKT(barkod, id){
+  try{
+    const url = GS_URL+'?action=delskt&b='+encodeURIComponent(barkod)+'&id='+encodeURIComponent(id)+'&ts='+Date.now();
+    const r = await fetch(url);
+    const d = await r.json();
+    return d.ok === true;
+  }catch(e){ return false; }
 }
 
 // ===== INIT =====
@@ -447,8 +457,9 @@ async function saveSKT(){
   DB.skts[curProduct.b].push({id:Date.now(),t:d,n:document.getElementById('skt-not').value.trim()});
   DB.skts[curProduct.b].sort((a,b)=>a.t.localeCompare(b.t));
   toast('Kaydediliyor...');
-  const ok = await gsSave();
-  toast(ok?'✅ SKT kaydedildi!':'✅ Yerel kaydedildi (Sheets bağlantı hatası)');
+  const newSKT = DB.skts[curProduct.b][DB.skts[curProduct.b].length-1];
+  const ok = await gsSaveSKT(curProduct.b, newSKT);
+  toast(ok?'✅ SKT kaydedildi!':'✅ Yerel kaydedildi');
   refreshHeader();
   document.getElementById('found-section').classList.add('hidden');
   document.getElementById('manual-input').value='';
@@ -603,17 +614,20 @@ async function saveEdit(){
   skts.sort((a,b)=>a.t.localeCompare(b.t));
   DB.skts[editTarget.b]=skts;
   closeEdit();renderList();renderInventory();refreshHeader();
-  const ok=await gsSave();
+  const updSKT = DB.skts[editTarget ? editTarget.b : ''];
+  const ok = updSKT ? await gsSaveSKT(editTarget.b, DB.skts[editTarget.b].find(x=>x.t===document.getElementById('e-date').value)||DB.skts[editTarget.b][0]) : false;
   toast(ok?'✅ Güncellendi!':'✅ Yerel güncellendi');
 }
 function closeEdit(){document.getElementById('edit-ov').classList.remove('open');editTarget=null;}
 async function delSKT(b,i){
   if(!confirm('Bu SKT kaydı silinsin mi?'))return;
   if(!DB.skts[b])return;
+  const delId = DB.skts[b][i].id;
   DB.skts[b].splice(i,1);
   if(!DB.skts[b].length) delete DB.skts[b];
+  lsSave();
   renderList();renderInventory();refreshHeader();
-  const ok=await gsSave();
+  const ok = await gsDelSKT(b, delId);
   toast(ok?'Silindi':'Yerel silindi');
 }
 
