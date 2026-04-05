@@ -269,7 +269,7 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
 <div class="toast" id="toast"></div>
 
 <script>
-const GS_URL = 'https://script.google.com/macros/s/AKfycbwjqFCNhjkROswV0mOCebgd7uVtIracqzX9bwLusDWrfKHSzwMGabJc3eixbuFxhKQk/exec';
+const GS_URL = 'https://script.google.com/macros/s/AKfycbztrLTl9znRHM7RJqLHFQrf9nU86H8By8MJlspejIYsnSeY1NgB5RrbIc66tWsfKKJb/exec';
 const SKEY = 'skt-v6';
 
 let DB = {products:[], removed:[], skts:{}, notifLog:{}};
@@ -311,7 +311,9 @@ async function gsSave(){
 
 async function gsSaveSKT(barkod, skt){
   try{
-    const url = GS_URL+'?action=saveskt&b='+encodeURIComponent(barkod)+'&t='+encodeURIComponent(skt.t)+'&n='+encodeURIComponent(skt.n||'')+'&id='+encodeURIComponent(skt.id)+'&ts='+Date.now();
+    const p = findP(barkod);
+    const ad = p ? encodeURIComponent(p.a) : '';
+    const url = GS_URL+'?action=saveskt&b='+encodeURIComponent(barkod)+'&t='+encodeURIComponent(skt.t)+'&n='+encodeURIComponent(skt.n||'')+'&id='+encodeURIComponent(skt.id)+'&a='+ad+'&ts='+Date.now();
     const r = await fetch(url);
     const d = await r.json();
     return d.ok === true;
