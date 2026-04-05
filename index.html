@@ -309,11 +309,11 @@ async function gsSave(){
   return true;
 }
 
-async function gsSaveSKT(barkod, skt){
+async function gsSaveSKT(barkod, skt, adParam){
   try{
     const p = findP(barkod);
-    const ad = p ? encodeURIComponent(p.a) : '';
-    const url = GS_URL+'?action=saveskt&b='+encodeURIComponent(barkod)+'&t='+encodeURIComponent(skt.t)+'&n='+encodeURIComponent(skt.n||'')+'&id='+encodeURIComponent(skt.id)+'&a='+ad+'&ts='+Date.now();
+    const ad = adParam || (p ? p.a : '') || '';
+    const url = GS_URL+'?action=saveskt&b='+encodeURIComponent(barkod)+'&t='+encodeURIComponent(skt.t)+'&n='+encodeURIComponent(skt.n||'')+'&id='+encodeURIComponent(skt.id)+'&a='+encodeURIComponent(ad)+'&ts='+Date.now();
     const r = await fetch(url);
     const d = await r.json();
     return d.ok === true;
@@ -460,7 +460,7 @@ async function saveSKT(){
   DB.skts[curProduct.b].sort((a,b)=>a.t.localeCompare(b.t));
   toast('Kaydediliyor...');
   const newSKT = DB.skts[curProduct.b][DB.skts[curProduct.b].length-1];
-  const ok = await gsSaveSKT(curProduct.b, newSKT);
+  const ok = await gsSaveSKT(curProduct.b, newSKT, curProduct.a);
   toast(ok?'✅ SKT kaydedildi!':'✅ Yerel kaydedildi');
   refreshHeader();
   document.getElementById('found-section').classList.add('hidden');
