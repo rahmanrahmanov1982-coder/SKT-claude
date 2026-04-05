@@ -23,38 +23,30 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .hidden{display:none!important;}
-
 .hdr{background:var(--primary);color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:100;box-shadow:0 3px 12px rgba(0,0,0,0.2);}
 .hdr-inner{display:flex;align-items:center;justify-content:space-between;}
 .hdr h1{font-size:20px;font-weight:800;}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,0.65);margin-top:2px;}
 .badge{background:var(--red);color:#fff;border-radius:20px;padding:3px 8px;font-size:11px;font-weight:700;}
-
 .tabs{background:var(--surface);display:flex;border-bottom:2px solid var(--border);position:sticky;top:58px;z-index:99;}
 .tab{flex:1;padding:12px 4px;text-align:center;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;}
 .tab.active{color:var(--primary);border-bottom-color:var(--primary);}
-
 .page{display:none;padding:14px 14px 90px;}
 .page.active{display:block;}
-
 .card{background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);}
 .card-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;}
-
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 16px;border-radius:10px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;border:none;width:100%;margin-bottom:8px;}
 .btn:last-child{margin-bottom:0;}
 .btn:active{opacity:.85;}
 .btn-primary{background:var(--primary);color:#fff;}
 .btn-secondary{background:var(--bg);color:var(--text);}
-.btn-danger{background:var(--red-bg);color:var(--red);}
 .btn-teal{background:#E0F2F1;color:#00695C;}
 .btn-sm{padding:7px 14px;font-size:13px;width:auto;margin-bottom:0;border-radius:8px;}
-
 .fg{margin-bottom:12px;}
 .fg:last-child{margin-bottom:0;}
 label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
-input,select{width:100%;padding:11px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--text);background:var(--bg);}
-input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff;}
-
+input{width:100%;padding:11px 12px;border:2px solid var(--border);border-radius:10px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--text);background:var(--bg);}
+input:focus{outline:none;border-color:var(--accent);background:#fff;}
 #scan-wrap{width:100%;aspect-ratio:1;background:#0a0a0a;border-radius:12px;overflow:hidden;position:relative;margin-bottom:12px;}
 #scan-video{width:100%;height:100%;object-fit:cover;display:block;}
 .scan-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
@@ -66,14 +58,11 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
 .sc.br{bottom:0;right:0;border-bottom-width:3px;border-right-width:3px;border-radius:0 0 6px 0;}
 .scan-line{position:absolute;left:5%;right:5%;height:2px;background:linear-gradient(90deg,transparent,#52B788,transparent);animation:sl 1.8s ease-in-out infinite;}
 @keyframes sl{0%,100%{top:8%;}50%{top:88%;}}
-
 .found-box{background:var(--green-bg);border:2px solid var(--accent);border-radius:12px;padding:14px;margin-bottom:12px;}
 .found-name{font-size:17px;font-weight:800;color:var(--green);}
 .found-code{font-size:12px;color:var(--muted);margin-top:3px;font-family:monospace;}
 .notfound-box{background:var(--red-bg);border:2px solid #FFCDD2;border-radius:12px;padding:14px;margin-bottom:12px;text-align:center;}
 .notfound-box p{color:var(--red);font-weight:700;}
-.notfound-box span{font-size:12px;color:var(--muted);font-family:monospace;}
-
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;scrollbar-width:none;}
 .chips::-webkit-scrollbar{display:none;}
 .chip{flex-shrink:0;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent;white-space:nowrap;}
@@ -83,7 +72,6 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
 .c-d5{background:var(--yellow-bg);color:var(--yellow);}.c-d5.on{border-color:var(--yellow);}
 .c-ok{background:var(--green-bg);color:var(--green);}.c-ok.on{border-color:var(--green);}
 .c-rem{background:#F3F4F6;color:#6B7280;}.c-rem.on{border-color:#6B7280;}
-
 .pc{background:var(--surface);border-radius:var(--radius);margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden;}
 .pc-head{display:flex;align-items:center;justify-content:space-between;padding:13px 14px 10px;}
 .pc-name{font-weight:700;font-size:15px;}
@@ -104,18 +92,15 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
 .bdr-y{border-left:4px solid var(--yellow);}
 .bdr-g{border-left:4px solid var(--accent);}
 .rem-tag{display:inline-block;background:#F3F4F6;color:#6B7280;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:4px;}
-
 .inv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
 .inv-stat{background:var(--surface);border-radius:12px;padding:12px 8px;text-align:center;box-shadow:var(--shadow);}
 .inv-stat .n{font-size:26px;font-weight:800;}
 .inv-stat .l{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;}
 .inv-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border-radius:10px;margin-bottom:8px;box-shadow:var(--shadow);}
 .sec-title{font-size:12px;font-weight:800;color:var(--muted);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.06em;}
-
 .search-wrap{position:relative;margin-bottom:12px;}
 .search-wrap input{padding-left:40px;}
 .si{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:16px;}
-
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;}
 .overlay.open{display:flex;}
 .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:8px 20px 32px;width:100%;max-height:90vh;overflow-y:auto;}
@@ -123,17 +108,12 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
 .modal-title{font-size:18px;font-weight:800;margin-bottom:16px;}
 .modal-row{display:flex;gap:8px;margin-top:12px;}
 .modal-row .btn{margin:0;}
-.diff-item{padding:7px 0;border-top:1px solid var(--bg);font-size:13px;}
-
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:11px 20px;border-radius:24px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw;}
 .toast.show{opacity:1;}
-
 .mbar{display:flex;gap:8px;}
 .mbar input{flex:1;}
 .empty{text-align:center;padding:48px 20px;color:var(--muted);}
 .empty .ei{font-size:56px;margin-bottom:14px;}
-
-/* LOADING */
 #loading{position:fixed;inset:0;background:var(--primary);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;color:#fff;gap:16px;}
 .spin{width:36px;height:36px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -141,11 +121,10 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
 </head>
 <body>
 
-<!-- LOADING -->
 <div id="loading">
   <div style="font-size:52px;">🏪</div>
   <div style="font-size:20px;font-weight:800;">SKT Takip</div>
-  <div style="font-size:14px;opacity:.7;">Veriler yükleniyor...</div>
+  <div style="font-size:14px;opacity:.7;" id="load-txt">Veriler yükleniyor...</div>
   <div class="spin"></div>
 </div>
 
@@ -182,7 +161,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
           </div>
         </div>
       </div>
-      <button class="btn btn-danger" onclick="stopScanner()">⏹ Durdur</button>
+      <button class="btn btn-secondary" onclick="stopScanner()">⏹ Durdur</button>
     </div>
   </div>
   <div class="card">
@@ -207,7 +186,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
   <div id="notfound-section" class="hidden">
     <div class="notfound-box">
       <p>❌ Ürün listede bulunamadı</p>
-      <span id="notfound-code"></span>
+      <span id="notfound-code" style="font-size:12px;color:var(--muted);font-family:monospace;"></span>
     </div>
   </div>
 </div>
@@ -241,20 +220,19 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
 <div class="page" id="page-settings">
   <div class="card">
     <div class="card-title">📊 Ürün Listesi</div>
-    <div id="list-status" style="font-size:13px;color:var(--muted);margin-bottom:12px;">Yükleniyor...</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">Excel: <strong>Barkod</strong> ve <strong>Ürün Adı</strong> sütunları olmalı.</p>
-    <button class="btn btn-primary" onclick="document.getElementById('xl-input').click()">📂 Excel Yükle / Güncelle</button>
-    <input type="file" id="xl-input" accept=".xlsx,.xls,.csv" class="hidden" onchange="importExcel(this)">
+    <div id="list-status" style="font-size:13px;color:var(--muted);margin-bottom:14px;">Yükleniyor...</div>
+    <button class="btn btn-primary" onclick="fetchProducts()">🔄 Ürün Listesini Güncelle</button>
+    <p style="font-size:11px;color:var(--muted);margin-top:8px;">Google Sheets'teki "Ürün Listesi" sekmesinden çeker.</p>
   </div>
 
   <div class="card">
     <div class="card-title">📤 Dışa Aktar</div>
-    <button class="btn btn-secondary" onclick="exportExcel()">💾 Excel İndir</button>
+    <button class="btn btn-secondary" onclick="exportExcel()">💾 SKT Listesini Excel İndir</button>
   </div>
 
   <div class="card">
     <div class="card-title">📱 Telegram</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Telegram bildirimleri Google Apps Script üzerinden otomatik gönderilmektedir.</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Otomatik rapor her gün 09:00'da Google Apps Script üzerinden gönderilir.</p>
     <button class="btn btn-teal" onclick="sendReport()">📊 Şimdi Rapor Gönder</button>
   </div>
 
@@ -288,79 +266,107 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
   </div>
 </div>
 
-<!-- DIFF MODAL -->
-<div class="overlay" id="diff-ov">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Excel Güncelleme</div>
-    <div id="diff-body"></div>
-    <div class="modal-row">
-      <button class="btn btn-secondary" onclick="cancelImport()">İptal</button>
-      <button class="btn btn-primary" onclick="confirmImport()">✅ Onayla</button>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
 
 <script>
 const GS_URL = 'https://script.google.com/macros/s/AKfycbwj-VCcbtNnP4NXWku-YBoK0y3Cc_DqVareXEfIzWgduNuZW9jLyYFqW1DFpJZlHxf-/exec';
-const SKEY = 'skt-v5';
+const SKEY = 'skt-v6';
 
-let DB = {products:[],removed:[],notifLog:{},deletePassword:''};
+let DB = {products:[], removed:[], skts:{}, notifLog:{}};
+// skts = {barkod: [{id, t, n}]}
+
 let filter = 'all';
 let curProduct = null;
 let editTarget = null;
-let pendingImport = null;
 let scanStream = null;
 let scanInterval = null;
 let scannerOn = false;
 
 // ===== STORAGE =====
-function lsLoad(){try{const r=localStorage.getItem(SKEY);if(r)DB=JSON.parse(r);}catch(e){}}
 function lsSave(){try{localStorage.setItem(SKEY,JSON.stringify(DB));}catch(e){}}
+function lsLoad(){try{const r=localStorage.getItem(SKEY);if(r){const d=JSON.parse(r);if(d)DB=d;}}catch(e){}}
 
-async function loadDB(){
+async function gsLoad(){
   try{
-    const r=await fetch(GS_URL+'?t='+Date.now());
-    const d=await r.json();
-    if(d&&d.products){DB=d;lsSave();return;}
+    const r = await fetch(GS_URL+'?action=load&t='+Date.now());
+    const d = await r.json();
+    if(d && (d.products || d.skts)){
+      // Merge: keep local skts if sheets has none
+      if(d.products) DB.products = d.products;
+      if(d.removed) DB.removed = d.removed;
+      if(d.skts) DB.skts = d.skts;
+      if(d.notifLog) DB.notifLog = d.notifLog;
+      lsSave();
+      return true;
+    }
   }catch(e){}
-  lsLoad();
+  return false;
 }
 
-function saveDB(){
+async function gsSave(){
   lsSave();
-  try {
+  return new Promise((resolve)=>{
     const xhr = new XMLHttpRequest();
     xhr.open('POST', GS_URL, true);
-    xhr.setRequestHeader('Content-Type', 'text/plain');
-    xhr.send(JSON.stringify(DB));
-  } catch(e){}
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4) resolve(xhr.status === 200);
+    };
+    xhr.onerror = ()=>resolve(false);
+    xhr.send(JSON.stringify({action:'save', data:DB}));
+  });
 }
 
 // ===== INIT =====
 async function init(){
-  await loadDB();
+  lsLoad();
+  document.getElementById('load-txt').textContent = 'Google Sheets\'ten yükleniyor...';
+  await gsLoad();
   document.getElementById('loading').style.display='none';
-  refreshHeader();refreshListStatus();
-  checkNotifStatus();renderList();renderInventory();
+  refreshHeader(); refreshListStatus();
+  checkNotifStatus(); renderList(); renderInventory();
   silentCheck();
 }
 
 function refreshHeader(){
   const t=DB.products.length;
-  const s=[...DB.products,...DB.removed].filter(p=>p.skts?.length).length;
-  document.getElementById('hdr-sub').textContent=t>0?`${t} ürün • ${s} SKT kaydı`:'Ürün listesi yüklenmedi';
-  const u=[...DB.products,...DB.removed].flatMap(p=>p.skts||[]).filter(e=>dl(e.t)<=5).length;
+  const sktCount = Object.values(DB.skts||{}).reduce((a,v)=>a+(v||[]).length,0);
+  document.getElementById('hdr-sub').textContent=t>0?`${t} ürün • ${sktCount} SKT kaydı`:'Ürün listesi yüklenmedi';
+  const urgent = Object.values(DB.skts||{}).flat().filter(e=>dl(e.t)<=5).length;
   const b=document.getElementById('alert-badge');
-  if(u>0){b.textContent=u;b.classList.remove('hidden');}else b.classList.add('hidden');
-  document.getElementById('pw-status').textContent=DB.deletePassword?'✅ Şifre belirlenmiş':'Şifre belirlenmedi';
+  if(urgent>0){b.textContent=urgent;b.classList.remove('hidden');}else b.classList.add('hidden');
 }
 
 function refreshListStatus(){
-  document.getElementById('list-status').textContent=DB.products.length>0
-    ?`✅ ${DB.products.length} ürün yüklü • ${DB.removed.length} listede yok`:'Henüz liste yüklenmedi';
+  document.getElementById('list-status').textContent = DB.products.length>0
+    ? `✅ ${DB.products.length} ürün yüklü`
+    : 'Ürün listesi yüklenmedi — Güncelle butonuna bas';
+}
+
+// ===== FETCH PRODUCTS FROM SHEETS =====
+async function fetchProducts(){
+  toast('Ürün listesi güncelleniyor...');
+  try{
+    const r = await fetch(GS_URL+'?action=products&t='+Date.now());
+    const d = await r.json();
+    if(d && d.products && d.products.length){
+      // Merge: keep existing SKT data
+      const existing = new Set(DB.products.map(p=>p.b));
+      const incoming = new Set(d.products.map(p=>p.b));
+      // Products removed from list → move to removed
+      const nowRemoved = DB.products.filter(p=>!incoming.has(p.b));
+      const keepRemoved = DB.removed.filter(p=>!incoming.has(p.b));
+      DB.removed = [...keepRemoved, ...nowRemoved];
+      DB.products = d.products;
+      await gsSave();
+      refreshHeader(); refreshListStatus(); renderList(); renderInventory();
+      toast(`✅ ${d.products.length} ürün güncellendi!`);
+    } else {
+      toast('❌ Ürün bulunamadı. Sheets\'teki "Ürün Listesi" sekmesini kontrol et.');
+    }
+  }catch(e){
+    toast('❌ Bağlantı hatası: '+e.message);
+  }
 }
 
 // ===== TABS =====
@@ -376,21 +382,21 @@ function goTab(t){
 
 // ===== SCANNER =====
 async function startScanner(){
-  if(!DB.products.length){toast('Önce Excel listesi yükleyin!');return;}
+  if(!DB.products.length){toast('Önce ürün listesini güncelleyin!');return;}
   document.getElementById('scan-placeholder').classList.add('hidden');
   document.getElementById('scan-live').classList.remove('hidden');
   if(!('BarcodeDetector' in window)){toast('Bu tarayıcı desteklemiyor, manuel girin.');stopScanner();return;}
   try{
     scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}});
     const video=document.getElementById('scan-video');
-    video.srcObject=scanStream;await video.play();
+    video.srcObject=scanStream; await video.play();
     const detector=new BarcodeDetector({formats:['ean_13','ean_8','code_128','upc_a','upc_e','code_39','itf']});
     const canvas=document.createElement('canvas');
     const ctx=canvas.getContext('2d');
     scannerOn=true;
     scanInterval=setInterval(async()=>{
       if(!scannerOn||video.readyState<2)return;
-      canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+      canvas.width=video.videoWidth; canvas.height=video.videoHeight;
       ctx.drawImage(video,0,0);
       try{
         const codes=await detector.detect(canvas);
@@ -432,14 +438,18 @@ function handleBarcode(code){
   }
 }
 
-function saveSKT(){
+async function saveSKT(){
   if(!curProduct)return;
   const d=document.getElementById('skt-date').value;
   if(!d){toast('Tarih seçin!');return;}
-  if(!curProduct.skts)curProduct.skts=[];
-  curProduct.skts.push({id:Date.now(),t:d,n:document.getElementById('skt-not').value.trim()});
-  curProduct.skts.sort((a,b)=>a.t.localeCompare(b.t));
-  saveDB();refreshHeader();toast('✅ SKT kaydedildi!');
+  if(!DB.skts) DB.skts={};
+  if(!DB.skts[curProduct.b]) DB.skts[curProduct.b]=[];
+  DB.skts[curProduct.b].push({id:Date.now(),t:d,n:document.getElementById('skt-not').value.trim()});
+  DB.skts[curProduct.b].sort((a,b)=>a.t.localeCompare(b.t));
+  toast('Kaydediliyor...');
+  const ok = await gsSave();
+  toast(ok?'✅ SKT kaydedildi!':'✅ Yerel kaydedildi (Sheets bağlantı hatası)');
+  refreshHeader();
   document.getElementById('found-section').classList.add('hidden');
   document.getElementById('manual-input').value='';
   curProduct=null;
@@ -456,6 +466,7 @@ function sbadge(d){
   return`<span class="sbadge b-grn">🟢 ${d} gün</span>`;
 }
 function fmtD(s){return new Date(s).toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function getSKTs(b){return (DB.skts||{})[b]||[];}
 
 // ===== LIST =====
 function setFilter(f){filter=f;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));document.getElementById('f-'+f).classList.add('on');renderList();}
@@ -463,29 +474,32 @@ function passes(e){const d=dl(e.t);if(filter==='all')return true;if(filter==='ex
 
 function renderList(){
   const q=(document.getElementById('search-input')?.value||'').toLowerCase();
-  const all=[...DB.products.map(p=>({...p,rem:false})),...DB.removed.map(p=>({...p,rem:true}))];
+  const all=[...DB.products.map(p=>({...p,rem:false})),...(DB.removed||[]).map(p=>({...p,rem:true}))];
   updateChips(all);
   let items=all.filter(p=>{
+    const skts=getSKTs(p.b);
     if(filter==='rem')return p.rem;
-    if(!(p.skts?.length))return false;
+    if(!skts.length)return false;
     if(q&&!p.a.toLowerCase().includes(q)&&!String(p.b).includes(q))return false;
     if(filter==='all')return true;
-    return p.skts.some(e=>passes(e));
+    return skts.some(e=>passes(e));
   });
-  if(filter!=='rem')items=items.filter(p=>p.skts?.length>0);
+  if(filter!=='rem')items=items.filter(p=>getSKTs(p.b).length>0);
   items.sort((a,b)=>{
-    const ad=a.skts?.length?Math.min(...a.skts.map(e=>dl(e.t))):9999;
-    const bd=b.skts?.length?Math.min(...b.skts.map(e=>dl(e.t))):9999;
+    const as=getSKTs(a.b),bs=getSKTs(b.b);
+    const ad=as.length?Math.min(...as.map(e=>dl(e.t))):9999;
+    const bd=bs.length?Math.min(...bs.map(e=>dl(e.t))):9999;
     return ad-bd;
   });
   const c=document.getElementById('list-container');
   if(!items.length){c.innerHTML=`<div class="empty"><div class="ei">📦</div><p>Kayıt yok</p></div>`;return;}
   c.innerHTML=items.map(p=>{
-    const skts=filter==='all'||filter==='rem'?(p.skts||[]):(p.skts||[]).filter(e=>passes(e));
+    let skts=getSKTs(p.b);
+    if(filter!=='all'&&filter!=='rem') skts=skts.filter(e=>passes(e));
     const mn=skts.length?Math.min(...skts.map(e=>dl(e.t))):999;
     const bc=skts.length?bdrClass(mn):'';
-    const rows=skts.map(e=>{
-      const d=dl(e.t);const ri=p.skts.indexOf(e);
+    const rows=skts.map((e,ri)=>{
+      const d=dl(e.t);
       return`<div class="skt-row">
         <div style="flex:1;min-width:0;"><div class="skt-date">${fmtD(e.t)}</div>${e.n?`<div class="skt-note">${e.n}</div>`:''}</div>
         ${sbadge(d)}
@@ -506,45 +520,62 @@ function renderList(){
 }
 
 function updateChips(all){
-  const es=all.flatMap(p=>(p.skts||[]).map(e=>({...e})));
+  const es=all.flatMap(p=>getSKTs(p.b));
   const cn=fn=>es.filter(fn).length;
   const set=(id,lb,n)=>{const el=document.getElementById('f-'+id);if(el)el.textContent=n?`${lb} (${n})`:lb;};
-  set('all','Tümü',es.length);set('exp','⛔ Geçmiş',cn(e=>dl(e.t)<0));
+  set('all','Tümü',es.length);
+  set('exp','⛔ Geçmiş',cn(e=>dl(e.t)<0));
   set('d3','🟠 3 Gün',cn(e=>{const d=dl(e.t);return d>=0&&d<=3;}));
   set('d5','🟡 5 Gün',cn(e=>{const d=dl(e.t);return d>0&&d<=5;}));
-  set('ok','🟢 Güvenli',cn(e=>dl(e.t)>5));set('rem','📦 Listede Yok',DB.removed.length);
+  set('ok','🟢 Güvenli',cn(e=>dl(e.t)>5));
+  set('rem','📦 Listede Yok',(DB.removed||[]).length);
 }
 
 // ===== INVENTORY =====
 function renderInventory(){
   const q=(document.getElementById('inv-search')?.value||'').toLowerCase();
-  const all=[...DB.products,...DB.removed];
+  const all=[...DB.products,...(DB.removed||[])];
   let nc=0,nw=0,no=0;
-  all.filter(p=>p.skts?.length).forEach(p=>{const m=Math.min(...p.skts.map(e=>dl(e.t)));if(m<=3)nc++;else if(m<=5)nw++;else no++;});
-  document.getElementById('ic').textContent=nc;document.getElementById('iw').textContent=nw;document.getElementById('io').textContent=no;
+  all.forEach(p=>{
+    const s=getSKTs(p.b);if(!s.length)return;
+    const m=Math.min(...s.map(e=>dl(e.t)));
+    if(m<=3)nc++;else if(m<=5)nw++;else no++;
+  });
+  document.getElementById('ic').textContent=nc;
+  document.getElementById('iw').textContent=nw;
+  document.getElementById('io').textContent=no;
   let items=all.filter(p=>!q||(p.a.toLowerCase().includes(q)||String(p.b).includes(q)));
   items.sort((a,b)=>{
-    const ad=a.skts?.length?Math.min(...a.skts.map(e=>dl(e.t))):9999;
-    const bd=b.skts?.length?Math.min(...b.skts.map(e=>dl(e.t))):9999;
+    const as=getSKTs(a.b),bs=getSKTs(b.b);
+    const ad=as.length?Math.min(...as.map(e=>dl(e.t))):9999;
+    const bd=bs.length?Math.min(...bs.map(e=>dl(e.t))):9999;
     return ad-bd;
   });
   const groups={c:[],w:[],o:[],n:[]};
-  items.forEach(p=>{if(!p.skts?.length){groups.n.push(p);return;}const m=Math.min(...p.skts.map(e=>dl(e.t)));if(m<=3)groups.c.push(p);else if(m<=5)groups.w.push(p);else groups.o.push(p);});
+  items.forEach(p=>{
+    const s=getSKTs(p.b);
+    if(!s.length){groups.n.push(p);return;}
+    const m=Math.min(...s.map(e=>dl(e.t)));
+    if(m<=3)groups.c.push(p);else if(m<=5)groups.w.push(p);else groups.o.push(p);
+  });
   let html='';
   const mg=(label,arr,color)=>{
     if(!arr.length)return;
     html+=`<div class="sec-title" style="color:${color};">${label} (${arr.length})</div>`;
     arr.forEach(p=>{
-      const bs=(p.skts||[]).map(e=>`<div style="display:flex;gap:4px;align-items:center;font-size:12px;"><span style="color:var(--muted);">${fmtD(e.t)}</span>${sbadge(dl(e.t))}</div>`).join('');
+      const bs=getSKTs(p.b).map(e=>`<div style="display:flex;gap:4px;align-items:center;font-size:12px;"><span style="color:var(--muted);">${fmtD(e.t)}</span>${sbadge(dl(e.t))}</div>`).join('');
       html+=`<div class="inv-row"><div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;">${p.a}</div><div style="font-size:11px;color:var(--muted);font-family:monospace;">${p.b}</div></div><div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex-shrink:0;">${bs||'<span style="font-size:12px;color:var(--muted);">SKT yok</span>'}</div></div>`;
     });
   };
-  mg('🔴 Kritik (0-3 Gün)',groups.c,'var(--red)');mg('🟡 Uyarı (4-5 Gün)',groups.w,'var(--yellow)');mg('🟢 Güvenli',groups.o,'var(--green)');mg('📦 SKT Girilmemiş',groups.n,'var(--muted)');
+  mg('🔴 Kritik (0-3 Gün)',groups.c,'var(--red)');
+  mg('🟡 Uyarı (4-5 Gün)',groups.w,'var(--yellow)');
+  mg('🟢 Güvenli',groups.o,'var(--green)');
+  mg('📦 SKT Girilmemiş',groups.n,'var(--muted)');
   document.getElementById('inv-container').innerHTML=html||`<div class="empty"><div class="ei">📦</div><p>Ürün yok</p></div>`;
 }
 
 // ===== EDIT =====
-function findP(b){return DB.products.find(x=>x.b===b)||DB.removed.find(x=>x.b===b);}
+function findP(b){return DB.products.find(x=>x.b===b)||(DB.removed||[]).find(x=>x.b===b);}
 function quickAdd(b){
   const p=findP(b);if(!p)return;
   curProduct=p;
@@ -559,87 +590,51 @@ function quickAdd(b){
   goTab('scanner');
 }
 function openEdit(b,i){
-  const p=findP(b);if(!p||!p.skts[i])return;
+  const skts=getSKTs(b);if(!skts[i])return;
   editTarget={b,i};
-  document.getElementById('e-date').value=p.skts[i].t;
-  document.getElementById('e-not').value=p.skts[i].n||'';
+  document.getElementById('e-date').value=skts[i].t;
+  document.getElementById('e-not').value=skts[i].n||'';
   document.getElementById('edit-ov').classList.add('open');
 }
-function saveEdit(){
+async function saveEdit(){
   if(!editTarget)return;
-  const p=findP(editTarget.b);if(!p)return;
-  p.skts[editTarget.i]={...p.skts[editTarget.i],t:document.getElementById('e-date').value,n:document.getElementById('e-not').value.trim()};
-  p.skts.sort((a,b)=>a.t.localeCompare(b.t));
-  saveDB();closeEdit();renderList();renderInventory();refreshHeader();toast('✅ Güncellendi!');
+  const skts=getSKTs(editTarget.b);if(!skts[editTarget.i])return;
+  skts[editTarget.i]={...skts[editTarget.i],t:document.getElementById('e-date').value,n:document.getElementById('e-not').value.trim()};
+  skts.sort((a,b)=>a.t.localeCompare(b.t));
+  DB.skts[editTarget.b]=skts;
+  closeEdit();renderList();renderInventory();refreshHeader();
+  const ok=await gsSave();
+  toast(ok?'✅ Güncellendi!':'✅ Yerel güncellendi');
 }
 function closeEdit(){document.getElementById('edit-ov').classList.remove('open');editTarget=null;}
-function delSKT(b,i){
+async function delSKT(b,i){
   if(!confirm('Bu SKT kaydı silinsin mi?'))return;
-  const p=findP(b);if(!p)return;
-  p.skts.splice(i,1);saveDB();renderList();renderInventory();refreshHeader();toast('Silindi');
+  if(!DB.skts[b])return;
+  DB.skts[b].splice(i,1);
+  if(!DB.skts[b].length) delete DB.skts[b];
+  renderList();renderInventory();refreshHeader();
+  const ok=await gsSave();
+  toast(ok?'Silindi':'Yerel silindi');
 }
-
-// ===== IMPORT =====
-function importExcel(input){
-  const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(ev){
-    try{
-      const wb=XLSX.read(new Uint8Array(ev.target.result),{type:'array'});
-      const ws=wb.Sheets[wb.SheetNames[0]];
-      const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,defval:''});
-      const clean=rows.filter(r=>r.some(c=>String(c).trim()));
-      if(clean.length<2){alert('Excel boş!');return;}
-      const hdrs=clean[0].map(h=>String(h||'').toLowerCase().trim());
-      let bc=-1,ac=-1;
-      hdrs.forEach((h,i)=>{const c=h.replace(/\s/g,'');if(c.includes('barkod')||c.includes('barcode')||c==='kod')bc=i;if(c.includes('\u00fcr\u00fcn')||c.includes('urun')||c.includes('name')||c==='ad'||c==='ad\u0131')ac=i;});
-      if(bc===-1||ac===-1){bc=0;ac=1;}
-      const np=clean.slice(1).filter(r=>String(r[bc]||'').trim()&&String(r[ac]||'').trim()).map(r=>({b:String(r[bc]).trim(),a:String(r[ac]).trim(),skts:[]}));
-      if(!np.length){alert('Ürün bulunamadı!');return;}
-      const ex=new Set(DB.products.map(p=>p.b));const inc=new Set(np.map(p=>p.b));
-      pendingImport={np,added:np.filter(p=>!ex.has(p.b)),removed:DB.products.filter(p=>!inc.has(p.b))};
-      showDiff();
-    }catch(e){alert('Hata: '+e.message);}
-    input.value='';
-  };
-  reader.readAsArrayBuffer(file);
-}
-function showDiff(){
-  const{added,removed}=pendingImport;
-  let h=`<p style="font-size:13px;color:var(--muted);margin-bottom:14px;">SKT verileri korunacak.</p>`;
-  if(added.length){h+=`<div style="font-size:12px;font-weight:700;color:var(--green);margin-bottom:4px;">✅ Yeni (${added.length})</div>`;h+=added.slice(0,6).map(p=>`<div class="diff-item" style="color:var(--green);">+ ${p.a}</div>`).join('');if(added.length>6)h+=`<div class="diff-item" style="opacity:.5;">+ ${added.length-6} ürün daha</div>`;}
-  if(removed.length){h+=`<div style="font-size:12px;font-weight:700;color:var(--red);margin:10px 0 4px;">⚠️ Çıkarılanlar (${removed.length})</div>`;h+=removed.slice(0,6).map(p=>`<div class="diff-item" style="color:var(--red);">− ${p.a}${p.skts?.length?` (${p.skts.length} SKT)`:''}</div>`).join('');if(removed.length>6)h+=`<div class="diff-item" style="opacity:.5;">− ${removed.length-6} ürün daha</div>`;}
-  h+=`<div style="font-size:13px;font-weight:600;color:var(--muted);padding-top:10px;">Toplam: ${pendingImport.np.length} ürün</div>`;
-  document.getElementById('diff-body').innerHTML=h;document.getElementById('diff-ov').classList.add('open');
-}
-function confirmImport(){
-  if(!pendingImport)return;
-  const sm={};[...DB.products,...DB.removed].forEach(p=>{if(p.skts?.length)sm[p.b]=p.skts;});
-  pendingImport.np.forEach(p=>{if(sm[p.b])p.skts=sm[p.b];});
-  const nb=new Set(pendingImport.np.map(p=>p.b));
-  DB.products=pendingImport.np;DB.removed=[...DB.removed.filter(p=>!nb.has(p.b)),...pendingImport.removed];
-  saveDB();document.getElementById('diff-ov').classList.remove('open');pendingImport=null;
-  refreshHeader();refreshListStatus();renderList();renderInventory();toast(`✅ ${DB.products.length} ürün yüklendi!`);
-}
-function cancelImport(){pendingImport=null;document.getElementById('diff-ov').classList.remove('open');}
 
 // ===== EXPORT =====
 function exportExcel(){
-  const all=[...DB.products.map(p=>({...p,d:'Aktif'})),...DB.removed.map(p=>({...p,d:'Listede Yok'}))];
+  const all=[...DB.products.map(p=>({...p,d:'Aktif'})),...(DB.removed||[]).map(p=>({...p,d:'Listede Yok'}))];
   const rows=[['Ürün Adı','Barkod','SKT Tarihi','Not','Durum','Kalan Gün']];
-  all.forEach(p=>(p.skts||[]).forEach(e=>rows.push([p.a,p.b,e.t,e.n||'',p.d,dl(e.t)])));
+  all.forEach(p=>getSKTs(p.b).forEach(e=>rows.push([p.a,p.b,e.t,e.n||'',p.d,dl(e.t)])));
   if(rows.length===1){toast('Dışa aktarılacak veri yok!');return;}
   const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:30},{wch:15},{wch:14},{wch:20},{wch:14},{wch:12}];
   const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'SKT');
-  XLSX.writeFile(wb,`SKT_${new Date().toISOString().split('T')[0]}.xlsx`);toast('✅ Excel indirildi!');
+  XLSX.writeFile(wb,`SKT_${new Date().toISOString().split('T')[0]}.xlsx`);
+  toast('✅ Excel indirildi!');
 }
 
-// ===== TELEGRAM (manuel gönder) =====
+// ===== TELEGRAM =====
 function buildReport(){
   const today=new Date().toLocaleDateString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric'});
-  const all=[...DB.products,...DB.removed];
+  const all=[...DB.products,...(DB.removed||[])];
   const acil=[],crit=[],warn=[];
-  all.forEach(p=>(p.skts||[]).forEach(e=>{
+  all.forEach(p=>getSKTs(p.b).forEach(e=>{
     const d=dl(e.t);
     if(d<0)acil.push({name:p.a,code:p.b,days:d});
     else if(d<=3)crit.push({name:p.a,code:p.b,days:d});
@@ -657,13 +652,13 @@ function buildReport(){
 async function sendReport(){
   toast('Rapor gönderiliyor...');
   try{
-    const r=await fetch(`https://api.telegram.org/bot8654267425:AAGRfolJ5Q_hUNtBvmP6QMoqXHJ3yHCkoXk/sendMessage`,{
+    const r=await fetch('https://api.telegram.org/bot8654267425:AAGRfolJ5Q_hUNtBvmP6QMoqXHJ3yHCkoXk/sendMessage',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({chat_id:'-1003857860560',text:buildReport(),parse_mode:'HTML'})
     });
     const d=await r.json();
     toast(d.ok?'✅ Rapor gönderildi!':'❌ Gönderilemedi.');
-  }catch(e){toast('❌ Hata: '+e.message);}
+  }catch(e){toast('❌ Hata');}
 }
 
 // ===== NOTIFICATIONS =====
@@ -678,32 +673,15 @@ async function reqNotif(){if(!('Notification' in window)){toast('Desteklenmiyor'
 function notify(t,b){if('Notification' in window&&Notification.permission==='granted')new Notification(t,{body:b});}
 async function silentCheck(){
   const ts=new Date().toISOString().split('T')[0];
-  const all=[...DB.products,...DB.removed];let changed=false;
-  all.forEach(p=>(p.skts||[]).forEach(e=>{
+  const all=[...DB.products,...(DB.removed||[])];
+  let changed=false;
+  all.forEach(p=>getSKTs(p.b).forEach(e=>{
     const d=dl(e.t);const base=`${p.b}_${e.t}_${ts}`;
-    if(d===0&&!DB.notifLog[base+'_d0']){DB.notifLog[base+'_d0']=true;changed=true;notify('🔴 SKT Uyarısı',`${p.a} — Bugün son gün!`);}
-    else if(d===3&&!DB.notifLog[base+'_d3']){DB.notifLog[base+'_d3']=true;changed=true;notify('🟠 SKT Uyarısı',`${p.a} — 3 gün kaldı`);}
-    else if(d===5&&!DB.notifLog[base+'_d5']){DB.notifLog[base+'_d5']=true;changed=true;notify('🟡 SKT Uyarısı',`${p.a} — 5 gün kaldı`);}
+    if(d===0&&!DB.notifLog[base+'_d0']){DB.notifLog[base+'_d0']=true;changed=true;notify('🔴 SKT',`${p.a} — Bugün son gün!`);}
+    else if(d===3&&!DB.notifLog[base+'_d3']){DB.notifLog[base+'_d3']=true;changed=true;notify('🟠 SKT',`${p.a} — 3 gün kaldı`);}
+    else if(d===5&&!DB.notifLog[base+'_d5']){DB.notifLog[base+'_d5']=true;changed=true;notify('🟡 SKT',`${p.a} — 5 gün kaldı`);}
   }));
-  if(changed)saveDB();
-}
-
-// ===== PASSWORD =====
-function savePw(){
-  const v=document.getElementById('del-pw').value.trim();
-  if(!v){toast('Şifre boş olamaz!');return;}
-  DB.deletePassword=v;saveDB();
-  document.getElementById('del-pw').value='';
-  document.getElementById('pw-status').textContent='✅ Şifre belirlenmiş';
-  toast('✅ Şifre kaydedildi!');
-}
-function clearAll(){
-  const pw=prompt('Silme şifresini girin:');if(pw===null)return;
-  if(!DB.deletePassword){toast('Önce şifre belirleyin!');return;}
-  if(pw!==DB.deletePassword){toast('❌ Yanlış şifre!');return;}
-  const dp=DB.deletePassword;
-  DB={products:[],removed:[],notifLog:{},deletePassword:dp};
-  saveDB();refreshHeader();refreshListStatus();renderList();renderInventory();toast('SKT verileri silindi');
+  if(changed)gsSave();
 }
 
 // ===== UTILS =====
