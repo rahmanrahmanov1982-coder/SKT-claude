@@ -189,6 +189,15 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
       <span id="notfound-code" style="font-size:12px;color:var(--muted);font-family:monospace;"></span>
     </div>
   </div>
+
+  <div style="text-align:center;padding:24px 16px 8px;">
+    <div style="font-size:12px;color:var(--muted);line-height:1.9;">
+      <div style="font-size:18px;margin-bottom:6px;">🏪</div>
+      <div style="font-weight:700;color:var(--text);font-size:13px;">Designed & built by Raskoff</div>
+      <div style="opacity:.65;margin-top:2px;">Developed with the assistance of Claude.ai</div>
+      <div style="opacity:.45;margin-top:2px;font-size:11px;">© 2026 — All rights reserved</div>
+    </div>
+  </div>
 </div>
 
 <!-- LIST -->
@@ -236,11 +245,7 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
     <button class="btn btn-teal" onclick="sendReport()">📊 Şimdi Rapor Gönder</button>
   </div>
 
-  <div class="card">
-    <div class="card-title">🔔 Tarayıcı Bildirimleri</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;" id="notif-status">Kontrol ediliyor...</p>
-    <button class="btn btn-secondary" onclick="reqNotif()">İzin İste</button>
-  </div>
+
 
   <div style="text-align:center;padding:24px 16px 8px;">
     <div style="font-size:12px;color:var(--muted);line-height:1.9;">
@@ -270,6 +275,28 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
 
 <script>
 const GS_URL = 'https://script.google.com/macros/s/AKfycbxyNYM2Hgcg_ECIJAI8usrFzUaJjs6DM4q0iD7-35-IPnxYnu0kSXLouW_ZvMV3gH6E/exec';
+
+// ===== SOUNDS =====
+function playBeep(type='scan'){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    if(type==='scan'){
+      osc.frequency.setValueAtTime(1200, ctx.currentTime);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.15);
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime+0.15);
+    } else if(type==='save'){
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.setValueAtTime(1200, ctx.currentTime+0.1);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.25);
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime+0.25);
+    }
+  }catch(e){}
+}
 const SKEY = 'skt-v6';
 
 let DB = {products:[], removed:[], skts:{}, notifLog:{}};
@@ -288,17 +315,26 @@ function lsLoad(){try{const r=localStorage.getItem(SKEY);if(r){const d=JSON.pars
 
 async function gsLoad(){
   try{
+    // Load SKTs from Sheets
     const r = await fetch(GS_URL+'?action=load&t='+Date.now());
     const d = await r.json();
-    if(d && (d.products || d.skts)){
-      // Merge: keep local skts if sheets has none
-      if(d.products) DB.products = d.products;
-      if(d.removed) DB.removed = d.removed;
-      if(d.skts) DB.skts = d.skts;
+    if(d && d.skts !== undefined){
+      DB.skts = d.skts || {};
       if(d.notifLog) DB.notifLog = d.notifLog;
       lsSave();
-      return true;
     }
+    // Load products from Sheets (always fresh)
+    const r2 = await fetch(GS_URL+'?action=products&t='+Date.now());
+    const d2 = await r2.json();
+    if(d2 && d2.products && d2.products.length){
+      // Keep SKT data when merging products
+      const nb = new Set(d2.products.map(p=>p.b));
+      DB.removed = (DB.removed||[]).filter(p=>!nb.has(p.b));
+      DB.products.filter(p=>!nb.has(p.b)).forEach(p=>{ if(!DB.removed.find(r=>r.b===p.b)) DB.removed.push(p); });
+      DB.products = d2.products;
+      lsSave();
+    }
+    return true;
   }catch(e){}
   return false;
 }
@@ -430,6 +466,7 @@ function stopScanner(){
 function searchManual(){const v=document.getElementById('manual-input').value.trim();if(!v)return;handleBarcode(v);}
 
 function handleBarcode(code){
+  playBeep('scan');
   document.getElementById('found-section').classList.add('hidden');
   document.getElementById('notfound-section').classList.add('hidden');
   document.getElementById('manual-input').value=code;
@@ -458,6 +495,7 @@ async function saveSKT(){
   if(!DB.skts[curProduct.b]) DB.skts[curProduct.b]=[];
   DB.skts[curProduct.b].push({id:Date.now(),t:d,n:document.getElementById('skt-not').value.trim()});
   DB.skts[curProduct.b].sort((a,b)=>a.t.localeCompare(b.t));
+  playBeep('save');
   toast('Kaydediliyor...');
   const newSKT = DB.skts[curProduct.b][DB.skts[curProduct.b].length-1];
   const ok = await gsSaveSKT(curProduct.b, newSKT, curProduct.a);
