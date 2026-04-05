@@ -331,11 +331,15 @@ async function loadDB(){
 
 function saveDB(){
   lsSave();
-  // Send as GET with encoded data to avoid CORS issues
-  const encoded = encodeURIComponent(JSON.stringify(DB));
-  fetch(GS_URL + '?action=save&data=' + encoded, {
-    mode:'no-cors'
-  }).catch(e=>{});
+  try {
+    const form = new FormData();
+    form.append('data', JSON.stringify(DB));
+    fetch(GS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: form
+    }).catch(e=>{});
+  } catch(e){}
 }
 
 // ===== INIT =====
