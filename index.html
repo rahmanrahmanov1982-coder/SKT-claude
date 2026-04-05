@@ -304,7 +304,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent);background:#fff
 <div class="toast" id="toast"></div>
 
 <script>
-const GS_URL = 'https://script.google.com/macros/s/AKfycbxMwEiYvL_Btq4inzDB30ovOsNXBUuWFJ6g7MK2rfoO2PnGNAt9x9m_PvPbeQ7_ibCO/exec';
+const GS_URL = 'https://script.google.com/macros/s/AKfycbwj-VCcbtNnP4NXWku-YBoK0y3Cc_DqVareXEfIzWgduNuZW9jLyYFqW1DFpJZlHxf-/exec';
 const SKEY = 'skt-v5';
 
 let DB = {products:[],removed:[],notifLog:{},deletePassword:''};
@@ -332,13 +332,10 @@ async function loadDB(){
 function saveDB(){
   lsSave();
   try {
-    const form = new FormData();
-    form.append('data', JSON.stringify(DB));
-    fetch(GS_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: form
-    }).catch(e=>{});
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', GS_URL, true);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.send(JSON.stringify(DB));
   } catch(e){}
 }
 
