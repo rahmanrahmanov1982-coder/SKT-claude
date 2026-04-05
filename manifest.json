@@ -16,8 +16,8 @@
       "purpose": "any maskable"
     }
   ],
-  "start_url": "/SKT-claude/",
-  "scope": "/SKT-claude/",
+  "start_url": "/skt-ggmarket/",
+  "scope": "/skt-ggmarket/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#1B5E3B",
