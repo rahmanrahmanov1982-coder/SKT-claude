@@ -114,6 +114,7 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
 .mbar input{flex:1;}
 .empty{text-align:center;padding:48px 20px;color:var(--muted);}
 .empty .ei{font-size:56px;margin-bottom:14px;}
+
 #loading{position:fixed;inset:0;background:var(--primary);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;color:#fff;gap:16px;}
 .spin{width:36px;height:36px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -131,6 +132,10 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
 <div class="hdr">
   <div class="hdr-inner">
     <div><h1>🏪 SKT Takip</h1><div class="hdr-sub" id="hdr-sub">Yükleniyor...</div></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div id="user-badge" style="background:rgba(255,255,255,0.2);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;"></div>
+  
+    </div>
     <div id="alert-badge" class="badge hidden">!</div>
   </div>
 </div>
@@ -188,6 +193,12 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
       <p>❌ Ürün listede bulunamadı</p>
       <span id="notfound-code" style="font-size:12px;color:var(--muted);font-family:monospace;"></span>
     </div>
+    <div class="card">
+      <div class="card-title">➕ Listeye Ekle</div>
+      <div class="fg"><label>Ürün Adı</label><input type="text" id="new-product-name" placeholder="Ürün adını girin..."></div>
+      <div class="fg"><label>Son Kullanma Tarihi (İsteğe Bağlı)</label><input type="date" id="new-product-skt"></div>
+      <button class="btn btn-primary" onclick="addNewProduct()">➕ Ekle ve Kaydet</button>
+    </div>
   </div>
 
   <div style="text-align:center;padding:24px 16px 8px;">
@@ -231,6 +242,7 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
     <div class="card-title">📊 Ürün Listesi</div>
     <div id="list-status" style="font-size:13px;color:var(--muted);margin-bottom:14px;">Yükleniyor...</div>
     <button class="btn btn-primary" onclick="fetchProducts()">🔄 Ürün Listesini Güncelle</button>
+    <button class="btn btn-secondary" onclick="openAddProduct()">➕ Manuel Ürün Ekle</button>
     <p style="font-size:11px;color:var(--muted);margin-top:8px;">Google Sheets'teki "Ürün Listesi" sekmesinden çeker.</p>
   </div>
 
@@ -257,6 +269,21 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
   </div>
 </div>
 
+<!-- ADD PRODUCT MODAL -->
+<div class="overlay" id="addprod-ov" onclick="if(event.target===this)closeAddProduct()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">➕ Yeni Ürün Ekle</div>
+    <div class="fg"><label>Barkod</label><input type="text" id="ap-barkod" placeholder="Barkod..." inputmode="numeric"></div>
+    <div class="fg"><label>Ürün Adı</label><input type="text" id="ap-ad" placeholder="Ürün adı..."></div>
+    <div class="fg"><label>Son Kullanma Tarihi (İsteğe Bağlı)</label><input type="date" id="ap-skt"></div>
+    <div class="modal-row">
+      <button class="btn btn-secondary" onclick="closeAddProduct()">İptal</button>
+      <button class="btn btn-primary" onclick="submitAddProduct()">➕ Ekle</button>
+    </div>
+  </div>
+</div>
+
 <!-- EDIT MODAL -->
 <div class="overlay" id="edit-ov" onclick="if(event.target===this)closeEdit()">
   <div class="modal">
@@ -274,7 +301,7 @@ input:focus{outline:none;border-color:var(--accent);background:#fff;}
 <div class="toast" id="toast"></div>
 
 <script>
-const GS_URL = 'https://script.google.com/macros/s/AKfycbxyNYM2Hgcg_ECIJAI8usrFzUaJjs6DM4q0iD7-35-IPnxYnu0kSXLouW_ZvMV3gH6E/exec';
+const GS_URL = 'https://script.google.com/macros/s/AKfycbwEEGizyIDFTEq01wD2Ogb6FJDq0oMC-sIm5KtTekiUHoHeaNDNoqS4sSCw0q43sTO9/exec';
 
 // ===== SOUNDS =====
 function playBeep(type='scan'){
@@ -345,11 +372,12 @@ async function gsSave(){
   return true;
 }
 
-async function gsSaveSKT(barkod, skt, adParam){
+async function gsSaveSKT(barkod, skt, adParam, sube){
   try{
     const p = findP(barkod);
     const ad = adParam || (p ? p.a : '') || '';
-    const url = GS_URL+'?action=saveskt&b='+encodeURIComponent(barkod)+'&t='+encodeURIComponent(skt.t)+'&n='+encodeURIComponent(skt.n||'')+'&id='+encodeURIComponent(skt.id)+'&a='+encodeURIComponent(ad)+'&ts='+Date.now();
+    const sb = sube || currentUser || '';
+    const url = GS_URL+'?action=saveskt&b='+encodeURIComponent(barkod)+'&t='+encodeURIComponent(skt.t)+'&n='+encodeURIComponent(skt.n||'')+'&id='+encodeURIComponent(skt.id)+'&a='+encodeURIComponent(ad)+'&s='+encodeURIComponent(sb)+'&ts='+Date.now();
     const r = await fetch(url);
     const d = await r.json();
     return d.ok === true;
@@ -483,6 +511,8 @@ function handleBarcode(code){
   }else{
     curProduct=null;
     document.getElementById('notfound-code').textContent=code;
+    document.getElementById('new-product-name').value='';
+    document.getElementById('new-product-skt').value='';
     document.getElementById('notfound-section').classList.remove('hidden');
   }
 }
@@ -498,7 +528,7 @@ async function saveSKT(){
   playBeep('save');
   toast('Kaydediliyor...');
   const newSKT = DB.skts[curProduct.b][DB.skts[curProduct.b].length-1];
-  const ok = await gsSaveSKT(curProduct.b, newSKT, curProduct.a);
+  const ok = await gsSaveSKT(curProduct.b, newSKT, curProduct.a, currentUser);
   toast(ok?'✅ SKT kaydedildi!':'✅ Yerel kaydedildi');
   refreshHeader();
   document.getElementById('found-section').classList.add('hidden');
@@ -671,6 +701,78 @@ async function delSKT(b,i){
   toast(ok?'Silindi':'Yerel silindi');
 }
 
+// ===== ADD PRODUCT =====
+function openAddProduct(barkod=''){
+  document.getElementById('ap-barkod').value = barkod;
+  document.getElementById('ap-ad').value = '';
+  document.getElementById('ap-skt').value = '';
+  document.getElementById('addprod-ov').classList.add('open');
+  setTimeout(()=>document.getElementById(barkod?'ap-ad':'ap-barkod').focus(), 100);
+}
+function closeAddProduct(){document.getElementById('addprod-ov').classList.remove('open');}
+
+async function submitAddProduct(){
+  const barkod = document.getElementById('ap-barkod').value.trim();
+  const ad = document.getElementById('ap-ad').value.trim();
+  const skt = document.getElementById('ap-skt').value;
+  if(!barkod){toast('Barkod girin!');return;}
+  if(!ad){toast('Ürün adı girin!');return;}
+  await saveNewProduct(barkod, ad, skt);
+  closeAddProduct();
+}
+
+async function addNewProduct(){
+  const barkod = document.getElementById('notfound-code').textContent;
+  const ad = document.getElementById('new-product-name').value.trim();
+  const skt = document.getElementById('new-product-skt').value;
+  if(!ad){toast('Ürün adı girin!');return;}
+  await saveNewProduct(barkod, ad, skt);
+  document.getElementById('notfound-section').classList.add('hidden');
+  document.getElementById('manual-input').value='';
+}
+
+async function saveNewProduct(barkod, ad, skt){
+  toast('Ekleniyor...');
+  // Add to local DB
+  if(!DB.products.find(p=>p.b===barkod)){
+    DB.products.push({b:barkod, a:ad});
+    lsSave();
+  }
+  // Save to Sheets product list
+  try{
+    const url = GS_URL+'?action=addproduct&b='+encodeURIComponent(barkod)+'&a='+encodeURIComponent(ad)+'&ts='+Date.now();
+    const r = await fetch(url);
+    const d = await r.json();
+    if(!d.ok && d.error) toast('⚠️ '+d.error);
+  }catch(e){}
+
+  // If SKT date given, save SKT too
+  if(skt){
+    if(!DB.skts) DB.skts={};
+    if(!DB.skts[barkod]) DB.skts[barkod]=[];
+    const newSKT = {id:Date.now(), t:skt, n:''};
+    DB.skts[barkod].push(newSKT);
+    DB.skts[barkod].sort((a,b)=>a.t.localeCompare(b.t));
+    await gsSaveSKT(barkod, newSKT, ad, currentUser);
+  }
+
+  refreshHeader(); refreshListStatus(); renderList(); renderInventory();
+  toast('✅ Ürün eklendi!');
+
+  // Show found section so user can add SKT if they want
+  if(!skt){
+    curProduct = DB.products.find(p=>p.b===barkod);
+    if(curProduct){
+      document.getElementById('found-name').textContent = ad;
+      document.getElementById('found-code').textContent = 'Barkod: '+barkod;
+      const d=new Date(); d.setDate(d.getDate()+30);
+      document.getElementById('skt-date').value = d.toISOString().split('T')[0];
+      document.getElementById('skt-not').value = '';
+      document.getElementById('found-section').classList.remove('hidden');
+    }
+  }
+}
+
 // ===== EXPORT =====
 function exportExcel(){
   const all=[...DB.products.map(p=>({...p,d:'Aktif'})),...(DB.removed||[]).map(p=>({...p,d:'Listede Yok'}))];
@@ -690,14 +792,14 @@ function buildReport(){
   const acil=[],crit=[],warn=[];
   all.forEach(p=>getSKTs(p.b).forEach(e=>{
     const d=dl(e.t);
-    if(d<0)acil.push({name:p.a,code:p.b,days:d});
-    else if(d<=3)crit.push({name:p.a,code:p.b,days:d});
-    else if(d<=5)warn.push({name:p.a,code:p.b,days:d});
+    if(d<0)acil.push({name:p.a,code:p.b,days:d,sube:e.s||''});
+    else if(d<=3)crit.push({name:p.a,code:p.b,days:d,sube:e.s||''});
+    else if(d<=5)warn.push({name:p.a,code:p.b,days:d,sube:e.s||''});
   }));
   let msg=`📊 <b>GÜNLÜK SKT RAPORU (${today})</b>\n`;
-  if(acil.length){msg+=`\n🚨 <b>ACİL DURUM (SKT GEÇMİŞ):</b>\n`;acil.forEach(x=>msg+=`• ${x.code} - ${x.name} — ${Math.abs(x.days)} gün geçti\n`);}
-  if(crit.length){msg+=`\n🔴 <b>KRİTİK DURUM (0-3 GÜN):</b>\n`;crit.forEach(x=>msg+=`• ${x.code} - ${x.name} — ${x.days===0?'Bugün son gün!':x.days+' gün kaldı'}\n`);}
-  if(warn.length){msg+=`\n🟡 <b>UYARI (4-5 GÜN):</b>\n`;warn.forEach(x=>msg+=`• ${x.code} - ${x.name} — ${x.days} gün kaldı\n`);}
+  if(acil.length){msg+=`\n🚨 <b>ACİL DURUM (SKT GEÇMİŞ):</b>\n`;acil.forEach(x=>msg+=`• ${x.code} - ${x.name}${x.sube?' ['+x.sube+']':''} — ${Math.abs(x.days)} gün geçti\n`);}
+  if(crit.length){msg+=`\n🔴 <b>KRİTİK DURUM (0-3 GÜN):</b>\n`;crit.forEach(x=>msg+=`• ${x.code} - ${x.name}${x.sube?' ['+x.sube+']':''} — ${x.days===0?'Bugün son gün!':x.days+' gün kaldı'}\n`);}
+  if(warn.length){msg+=`\n🟡 <b>UYARI (4-5 GÜN):</b>\n`;warn.forEach(x=>msg+=`• ${x.code} - ${x.name}${x.sube?' ['+x.sube+']':''} — ${x.days} gün kaldı\n`);}
   if(!acil.length&&!crit.length&&!warn.length){msg+=`\n✅ <b>5 gün içinde SKT dolacak ürün yok.</b>\nKayıtlı ürün: ${DB.products.length}\n`;}
   const tot=acil.length+crit.length+warn.length;
   if(tot>0)msg+=`\n📦 <b>Toplam ${tot} kayıt</b> • ${DB.products.length} aktif ürün`;
@@ -744,6 +846,8 @@ function toast(msg){
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2800);
 }
+
+let currentUser = '';
 
 init();
 </script>
